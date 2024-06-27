@@ -25,6 +25,9 @@ int main(int argc, char *argv[]) {
 
   std::vector<char> game_map(size_of_env * size_of_env, '+');
 
+  // Initialize game map with entities
+  ParkSpace::initializePlayer(game_map, size_of_env);
+
   // game loop
   while (true) {
     // display game map

@@ -6,6 +6,7 @@ namespace ParkSpace {
 
 int getInt(const char *str);
 void printGameMap(const std::vector<char> &game_map, int size_of_env);
+void initializePlayer(std::vector<char> &game_map, int size_of_env);
 
 } // namespace ParkSpace
 
