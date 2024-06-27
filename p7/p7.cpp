@@ -50,7 +50,10 @@ void ParkSpace::initializePlayer(std::vector<char> &game_map, int size_of_env) {
 void ParkSpace::initializeTrees(std::vector<char> &game_map, int size_of_env,
                                 int num_of_trees) {
 
-  for (int i = 0; i < num_of_trees; ++i) {
+  double num_of_infested{std::ceil(num_of_trees * 0.25)};
+  int infested_trees{static_cast<int>(num_of_infested)};
+
+  for (int i = 0; i < num_of_trees - infested_trees; ++i) {
     int rand_value{getRandValue(0, size_of_env * size_of_env)};
     assert(rand_value < game_map.size());
 
@@ -62,6 +65,17 @@ void ParkSpace::initializeTrees(std::vector<char> &game_map, int size_of_env,
       game_map.at(rand_value + 1) = 'T';
     } else {
       game_map.at(rand_value) = 'T';
+    }
+  }
+
+  for (int i = 0; i < infested_trees; ++i) {
+    int rand_value{getRandValue(0, size_of_env * size_of_env)};
+    assert(rand_value < game_map.size());
+
+    if (game_map.at(rand_value) == 'P') {
+      game_map.at(rand_value + 1) = 'I';
+    } else {
+      game_map.at(rand_value) = 'I';
     }
   }
 }
@@ -82,6 +96,9 @@ void ParkSpace::initializeBlueGrass(std::vector<char> &game_map,
       }
     } else if (game_map.at(rand_value) == 'T') {
       game_map.at(rand_value) = '*';
+
+    } else if (game_map.at(rand_value) == 'I') {
+      continue;
     } else {
       game_map.at(rand_value) = '#';
     }
