@@ -39,6 +39,13 @@ void ParkSpace::printGameMap(const std::vector<char> &game_map,
   std::cout << '\n';
 }
 
+void ParkSpace::printKey() {
+  std::cout << "+++++++++++++KEY+++++++++++++\n";
+  std::cout << "P => Player, T => Tree, I = Infested Tree\n";
+  std::cout << "# => Bluegrass, * => Tree on Bluegrass\n";
+  std::cout << "_ => Lawn\n";
+}
+
 void ParkSpace::initializePlayer(std::vector<char> &game_map, int size_of_env) {
   int cols{2};
   int num_of_spaces{cols * size_of_env};

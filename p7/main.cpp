@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
   while (true) {
     // display game map
     ParkSpace::printGameMap(game_map, size_of_env);
+    ParkSpace::printKey();
     // handle player input
     char input{};
     std::cin >> input;
