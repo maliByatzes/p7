@@ -55,10 +55,35 @@ void ParkSpace::initializeTrees(std::vector<char> &game_map, int size_of_env,
     assert(rand_value < game_map.size());
 
     // trees can spawn on top of other trees, fix...
+    // Trees are initialized before bluegrass, so the
+    // bluegrass initialization functio does all the
+    // checks
     if (game_map.at(rand_value) == 'P') {
       game_map.at(rand_value + 1) = 'T';
     } else {
       game_map.at(rand_value) = 'T';
+    }
+  }
+}
+
+void ParkSpace::initializeBlueGrass(std::vector<char> &game_map,
+                                    int size_of_env, int num_of_bluegrass) {
+
+  for (int i = 0; i < num_of_bluegrass; ++i) {
+    int rand_value{getRandValue(0, size_of_env * size_of_env)};
+    assert(rand_value < game_map.size());
+
+    if (game_map.at(rand_value) == 'P') {
+      if (game_map.at(rand_value + 1) == 'T') {
+        // combination of bluegrass '#' and tree 'T'
+        game_map.at(rand_value + 1) = '*';
+      } else {
+        game_map.at(rand_value + 1) = '#';
+      }
+    } else if (game_map.at(rand_value) == 'T') {
+      game_map.at(rand_value) = '*';
+    } else {
+      game_map.at(rand_value) = '#';
     }
   }
 }

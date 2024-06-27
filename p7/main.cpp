@@ -23,12 +23,12 @@ int main(int argc, char *argv[]) {
     std::cout << "Exiting: " << e.what() << '\n';
   }
 
-  std::vector<char> game_map(size_of_env * size_of_env, '+');
+  std::vector<char> game_map(size_of_env * size_of_env, '_');
 
   // Initialize game map with entities
   ParkSpace::initializePlayer(game_map, size_of_env);
   ParkSpace::initializeTrees(game_map, size_of_env, num_of_trees);
-
+  ParkSpace::initializeBlueGrass(game_map, size_of_env, num_of_bluegrass);
 
   // game loop
   while (true) {
