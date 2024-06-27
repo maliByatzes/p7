@@ -27,6 +27,8 @@ int main(int argc, char *argv[]) {
 
   // Initialize game map with entities
   ParkSpace::initializePlayer(game_map, size_of_env);
+  ParkSpace::initializeTrees(game_map, size_of_env, num_of_trees);
+
 
   // game loop
   while (true) {

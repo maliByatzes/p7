@@ -1,4 +1,5 @@
 #include "p7.hpp"
+#include <cassert>
 #include <cstddef>
 #include <cstdlib>
 #include <iomanip>
@@ -17,6 +18,14 @@ int ParkSpace::getInt(const char *str) {
   return num;
 }
 
+int ParkSpace::getRandValue(int lower_bound, int upper_bound) {
+  std::random_device r;
+  std::default_random_engine engine(r());
+  std::uniform_int_distribution<int> uniform_dist(lower_bound, upper_bound);
+  int rand_value{uniform_dist(engine)};
+  return rand_value;
+}
+
 void ParkSpace::printGameMap(const std::vector<char> &game_map,
                              int size_of_env) {
 
@@ -33,11 +42,23 @@ void ParkSpace::printGameMap(const std::vector<char> &game_map,
 void ParkSpace::initializePlayer(std::vector<char> &game_map, int size_of_env) {
   int cols{2};
   int num_of_spaces{cols * size_of_env};
-
-  std::random_device r;
-  std::default_random_engine engine(r());
-  std::uniform_int_distribution<int> uniform_dist(0, num_of_spaces - 1);
-  int rand_value{uniform_dist(engine)};
-
+  int rand_value{getRandValue(0, num_of_spaces - 1)};
+  assert(rand_value < game_map.size());
   game_map.at(static_cast<std::size_t>(rand_value)) = 'P';
+}
+
+void ParkSpace::initializeTrees(std::vector<char> &game_map, int size_of_env,
+                                int num_of_trees) {
+
+  for (int i = 0; i < num_of_trees; ++i) {
+    int rand_value{getRandValue(0, size_of_env * size_of_env)};
+    assert(rand_value < game_map.size());
+
+    // trees can spawn on top of other trees, fix...
+    if (game_map.at(rand_value) == 'P') {
+      game_map.at(rand_value + 1) = 'T';
+    } else {
+      game_map.at(rand_value) = 'T';
+    }
+  }
 }
