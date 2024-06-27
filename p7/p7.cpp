@@ -1,14 +1,15 @@
+#include "p7.hpp"
+#include <cstdlib>
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
-int main (int argc, char* argv[])
-{
-  using namespace std;
-
-  if (argc < 2)
-  {
-    cerr << "error: missing name" << endl;
-    return 1;
+int ParkSpace::getInt(const char *str) {
+  int num{};
+  std::stringstream ss{str};
+  ss >> num;
+  if (ss.fail()) {
+    throw std::runtime_error("Could not convert from string to integer.");
   }
-
-  cout << "Hello, " << argv[1] << '!' << endl;
+  return num;
 }
