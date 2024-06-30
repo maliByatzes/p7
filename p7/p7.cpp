@@ -58,6 +58,9 @@ void ParkSpace::disableRawMode() {
 }
 
 void ParkSpace::die(const char *s) {
+  std::cout << "\x1b[2J";
+  std::cout << "\x1b[H";
+
   perror(s);
   std::exit(1);
 }
@@ -67,6 +70,8 @@ void ParkSpace::gameProcessKeypress() {
 
   switch (c) {
   case CRTL_KEY('q'):
+    std::cout << "\x1b[2J";
+    std::cout << "\x1b[H";
     std::exit(0);
     break;
   }
@@ -81,6 +86,11 @@ char ParkSpace::readSingleKey() {
     }
   }
   return c;
+}
+
+void ParkSpace::clearScreen() {
+  std::cout << "\x1b[2J";
+  std::cout << "\x1b[H";
 }
 
 void ParkSpace::printGameMap(const std::vector<char> &game_map,

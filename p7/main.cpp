@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
   ParkSpace::enableRawMode();
 
   while (true) {
+    ParkSpace::clearScreen();
     ParkSpace::printGameMap(game_map, size_of_env);
     ParkSpace::printKey();
 

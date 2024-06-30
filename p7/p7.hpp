@@ -12,6 +12,7 @@ void disableRawMode();
 void die(const char* s);
 char readSingleKey();
 void gameProcessKeypress();
+void clearScreen();
 void printGameMap(const std::vector<char> &game_map, int size_of_env);
 void printKey();
 void initializePlayer(std::vector<char> &game_map, int size_of_env);
