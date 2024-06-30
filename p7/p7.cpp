@@ -1,5 +1,6 @@
 #include "p7.hpp"
 #include <cassert>
+#include <cerrno>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
@@ -10,6 +11,8 @@
 #include <stdexcept>
 #include <termios.h>
 #include <unistd.h>
+
+#define CRTL_KEY(k) ((k) & 0x1f)
 
 struct termios original_termios;
 
@@ -57,6 +60,27 @@ void ParkSpace::disableRawMode() {
 void ParkSpace::die(const char *s) {
   perror(s);
   std::exit(1);
+}
+
+void ParkSpace::gameProcessKeypress() {
+  char c{readSingleKey()};
+
+  switch (c) {
+  case CRTL_KEY('q'):
+    std::exit(0);
+    break;
+  }
+}
+
+char ParkSpace::readSingleKey() {
+  int nread{};
+  char c{};
+  while ((nread = read(STDIN_FILENO, &c, 1)) != 1) {
+    if (nread == -1 && errno != EAGAIN) {
+      die("read");
+    }
+  }
+  return c;
 }
 
 void ParkSpace::printGameMap(const std::vector<char> &game_map,

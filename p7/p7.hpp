@@ -1,7 +1,6 @@
 #ifndef P7_HPP_
 #define P7_HPP_
 
-#include <termios.h>
 #include <vector>
 
 namespace ParkSpace {
@@ -11,6 +10,8 @@ int getRandValue(int lower_bound, int upper_bound);
 void enableRawMode();
 void disableRawMode();
 void die(const char* s);
+char readSingleKey();
+void gameProcessKeypress();
 void printGameMap(const std::vector<char> &game_map, int size_of_env);
 void printKey();
 void initializePlayer(std::vector<char> &game_map, int size_of_env);
