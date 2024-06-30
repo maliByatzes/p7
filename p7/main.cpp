@@ -1,7 +1,9 @@
 #include "p7.hpp"
 #include <cstdlib>
 #include <iostream>
+#include <termios.h>
 #include <vector>
+#include <unistd.h>
 
 int main(int argc, char *argv[]) {
   if (argc != 4) {
@@ -30,14 +32,18 @@ int main(int argc, char *argv[]) {
   ParkSpace::initializeTrees(game_map, size_of_env, num_of_trees);
   ParkSpace::initializeBlueGrass(game_map, size_of_env, num_of_bluegrass);
 
+  ParkSpace::enableRawMode();
+
+  char c;
+  while (read(STDIN_FILENO, &c, 1) == 1 && c != 'q');
+
+  /*
   // game loop
   while (true) {
     // display game map
     ParkSpace::printGameMap(game_map, size_of_env);
     ParkSpace::printKey();
     // handle player input
-    char input{};
-    std::cin >> input;
     // check for endgame
-  }
+  }*/
 }

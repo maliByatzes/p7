@@ -7,6 +7,10 @@
 #include <random>
 #include <sstream>
 #include <stdexcept>
+#include <termios.h>
+#include <unistd.h>
+
+struct termios original_termios;
 
 int ParkSpace::getInt(const char *str) {
   int num{};
@@ -24,6 +28,20 @@ int ParkSpace::getRandValue(int lower_bound, int upper_bound) {
   std::uniform_int_distribution<int> uniform_dist(lower_bound, upper_bound);
   int rand_value{uniform_dist(engine)};
   return rand_value;
+}
+
+void ParkSpace::enableRawMode() {
+  tcgetattr(STDIN_FILENO, &original_termios);
+  atexit(disableRawMode);
+
+  struct termios raw = original_termios;
+  raw.c_lflag &= ~(ECHO | ICANON);
+
+  tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+}
+
+void ParkSpace::disableRawMode() {
+  tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios);
 }
 
 void ParkSpace::printGameMap(const std::vector<char> &game_map,
