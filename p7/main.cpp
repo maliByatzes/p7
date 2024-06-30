@@ -1,9 +1,12 @@
 #include "p7.hpp"
+#include <cctype>
+#include <cerrno>
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <termios.h>
-#include <vector>
 #include <unistd.h>
+#include <vector>
 
 int main(int argc, char *argv[]) {
   if (argc != 4) {
@@ -34,8 +37,22 @@ int main(int argc, char *argv[]) {
 
   ParkSpace::enableRawMode();
 
-  char c;
-  while (read(STDIN_FILENO, &c, 1) == 1 && c != 'q');
+  char c{};
+  while (true) {
+    ParkSpace::printGameMap(game_map, size_of_env);
+    ParkSpace::printKey();
+    if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN) {
+      ParkSpace::die("read");
+    }
+    if (std::iscntrl(c)) {
+      printf("%d\n", c);
+    } else {
+      printf("%d ('%c')\n", c, c);
+    }
+    if (c == 'q') {
+      break;
+    }
+  }
 
   /*
   // game loop

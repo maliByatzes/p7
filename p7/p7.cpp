@@ -1,6 +1,7 @@
 #include "p7.hpp"
 #include <cassert>
 #include <cstddef>
+#include <cstdio>
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
@@ -31,17 +32,31 @@ int ParkSpace::getRandValue(int lower_bound, int upper_bound) {
 }
 
 void ParkSpace::enableRawMode() {
-  tcgetattr(STDIN_FILENO, &original_termios);
+  if (tcgetattr(STDIN_FILENO, &original_termios) == -1) {
+    die("tcgetattr");
+  }
   atexit(disableRawMode);
 
   struct termios raw = original_termios;
-  raw.c_lflag &= ~(ECHO | ICANON);
+  raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
+  // raw.c_oflag &= ~(OPOST);
+  raw.c_cflag |= (CS8);
+  raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
 
-  tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
+    die("tcsetattr");
+  }
 }
 
 void ParkSpace::disableRawMode() {
-  tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios);
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios) == -1) {
+    die("tcsetattr");
+  }
+}
+
+void ParkSpace::die(const char *s) {
+  perror(s);
+  std::exit(1);
 }
 
 void ParkSpace::printGameMap(const std::vector<char> &game_map,
