@@ -9,7 +9,7 @@ int getInt(const char *str);
 int getRandValue(int lower_bound, int upper_bound);
 void enableRawMode();
 void disableRawMode();
-void die(const char* s);
+void die(const char *s);
 char readSingleKey();
 void gameProcessKeypress(std::vector<char> &game_map, int size_of_env);
 void clearScreen();
@@ -22,8 +22,10 @@ void initializeBlueGrass(std::vector<char> &game_map, int size_of_env,
                          int num_of_bluegrass);
 
 void movePlayerUp(std::vector<char> &game_map, int size_of_env);
+void movePlayerDown(std::vector<char> &game_map, int size_of_env);
 
 bool isMultipleOf(int a, int b);
+int findPlayerPos(const std::vector<char> &game_map);
 
 } // namespace ParkSpace
 

@@ -82,6 +82,7 @@ void ParkSpace::gameProcessKeypress(std::vector<char> &game_map,
   case 'd':
     break;
   case 's':
+    movePlayerDown(game_map, size_of_env);
     break;
   case CRTL_KEY('q'):
     std::cout << "\x1b[2J";
@@ -196,16 +197,33 @@ void ParkSpace::initializeBlueGrass(std::vector<char> &game_map,
 }
 
 void ParkSpace::movePlayerUp(std::vector<char> &game_map, int size_of_env) {
-  auto player_it = std::find(game_map.begin(), game_map.end(), 'P');
-
-  if (player_it == std::end(game_map)) {
-    throw std::runtime_error("Could not find player in game map");
+  int player_idx{};
+  try {
+    player_idx = findPlayerPos(game_map);
+  } catch (std::runtime_error &e) {
+    std::cout << e.what() << '\n';
   }
-
-  int player_idx{static_cast<int>(player_it - game_map.begin())};
 
   if (player_idx != 0 && !isMultipleOf(player_idx, size_of_env)) {
     int player_dest{player_idx - 1};
+
+    // check for entities in the destination column here
+
+    game_map[player_idx] = '_';
+    game_map[player_dest] = 'P';
+  }
+}
+
+void ParkSpace::movePlayerDown(std::vector<char> &game_map, int size_of_env) {
+  int player_idx{};
+  try {
+    player_idx = findPlayerPos(game_map);
+  } catch (std::runtime_error &e) {
+    std::cout << e.what() << '\n';
+  }
+
+  if (!isMultipleOf(player_idx + 1, size_of_env)) {
+    int player_dest{player_idx + 1};
 
     // check for entities in the destination column here
 
@@ -221,4 +239,12 @@ bool ParkSpace::isMultipleOf(int a, int b) {
     }
   }
   return false;
+}
+
+int ParkSpace::findPlayerPos(const std::vector<char> &game_map) {
+  auto player_it = std::find(game_map.begin(), game_map.end(), 'P');
+  if (player_it == std::end(game_map)) {
+    throw std::runtime_error("Could not find player in game map");
+  }
+  return static_cast<int>(player_it - game_map.begin());
 }
