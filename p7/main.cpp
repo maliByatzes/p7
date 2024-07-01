@@ -1,6 +1,7 @@
 #include "p7.hpp"
 #include <cstdlib>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 int main(int argc, char *argv[]) {
@@ -19,8 +20,13 @@ int main(int argc, char *argv[]) {
     size_of_env = ParkSpace::getInt(argv[1]);
     num_of_trees = ParkSpace::getInt(argv[2]);
     num_of_bluegrass = ParkSpace::getInt(argv[3]);
+
+    if (size_of_env < 5) {
+      throw std::runtime_error("Size of canvas must at least 5");
+    }
   } catch (const std::runtime_error &e) {
     std::cout << "Exiting: " << e.what() << '\n';
+    std::exit(1);
   }
 
   std::vector<char> game_map(size_of_env * size_of_env, '_');

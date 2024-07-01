@@ -198,8 +198,146 @@ void ParkSpace::initializeBlueGrass(std::vector<char> &game_map,
   }
 }
 
+// absolutely epitome of good code this 󰩐
 void ParkSpace::updateGameMap(std::vector<char> &game_map, int size_of_env) {
   // update lawn with bluegrass
+  for (size_t i = 0; i < size_of_env * size_of_env; ++i) {
+    if (game_map.at(i) == '_') {
+
+      if (i < size_of_env) {
+        // top-left corner
+        if (i == 0) {
+          int cumulative{};
+          if (game_map.at(i + 3) == '#') {
+            cumulative += 5;
+          }
+
+          if (game_map.at(i + 1) == '#') {
+            cumulative += 5;
+          }
+          // chance spawn bluegrass at i
+          continue;
+        }
+        // bottom-left corner
+        else if (i == (size_of_env - 1)) {
+          int cumulative{};
+          if (game_map.at(i - 1) == '#') {
+            cumulative += 5;
+          }
+
+          if (game_map.at(i + 3) == '#') {
+            cumulative += 5;
+          }
+          // chance spawn bluegrass at i
+          continue;
+        } else {
+          int cumulative{};
+          if (game_map.at(i - 1) == '#') {
+            cumulative += 5;
+          }
+
+          if (game_map.at(i + 3) == '#') {
+            cumulative += 5;
+          }
+
+          if (game_map.at(i + 1) == '#') {
+            cumulative += 5;
+          }
+          // chance spawn bluegrass at i
+          continue;
+        }
+      }
+
+      if (isMultipleOf(i, size_of_env) && i != 0) {
+        // top-right corner
+        if (i == ((size_of_env * size_of_env) - size_of_env)) {
+          int cumulative{};
+          if (game_map.at(i - 3) == '#') {
+            cumulative += 5;
+          }
+
+          if (game_map.at(i + 1) == '#') {
+            cumulative += 5;
+          }
+          // chance spawn bluegrass at i
+          continue;
+        } else {
+          int cumulative{};
+          if (game_map.at(i - 3) == '#') {
+            cumulative += 5;
+          }
+          if (game_map.at(i + 1) == '#') {
+            cumulative += 5;
+          }
+          if (game_map.at(i + 3) == '#') {
+            cumulative += 5;
+          }
+          // chance spawn bluegrass at i
+          continue;
+        }
+      }
+
+      if (i > ((size_of_env * size_of_env) - size_of_env)) {
+        // bottom-left corner
+        if (i == ((size_of_env * size_of_env) - 1)) {
+          int cumulative{};
+          if (game_map.at(i - 1) == '#') {
+            cumulative += 5;
+          }
+
+          if (game_map.at(i - 3) == '#') {
+            cumulative += 5;
+          }
+          // chance spawn bluegrass at i
+          continue;
+        } else {
+          int cumulative{};
+          if (game_map.at(i - 1) == '#') {
+            cumulative += 5;
+          }
+          if (game_map.at(i - 3) == '#') {
+            cumulative += 5;
+          }
+          if (game_map.at(i + 1) == '#') {
+            cumulative += 5;
+          }
+          // chance spawn bluegrass at i
+          continue;
+        }
+      }
+
+      if (isMultipleOf(i + 1, size_of_env) && i != (size_of_env - 1) &&
+          i != ((size_of_env * size_of_env) - 1)) {
+        int cumulative{};
+        if (game_map.at(i - 1) == '#') {
+          cumulative += 5;
+        }
+        if (game_map.at(i - 3) == '#') {
+          cumulative += 5;
+        }
+        if (game_map.at(i + 3) == '#') {
+          cumulative += 5;
+        }
+        // chance spawn bluegrass at i
+        continue;
+      }
+
+      int cumulative{};
+      if (game_map.at(i - 1) == '#') {
+        cumulative += 5;
+      }
+      if (game_map.at(i - 3) == '#') {
+        cumulative += 5;
+      }
+      if (game_map.at(i + 1) == '#') {
+        cumulative += 5;
+      }
+      if (game_map.at(i + 3) == '#') {
+        cumulative += 5;
+      }
+      // chance spawn bluegrass at i
+    }
+  }
 }
 
 void ParkSpace::movePlayerUp(std::vector<char> &game_map, int size_of_env) {
@@ -208,6 +346,7 @@ void ParkSpace::movePlayerUp(std::vector<char> &game_map, int size_of_env) {
     player_idx = findPlayerPos(game_map);
   } catch (std::runtime_error &e) {
     std::cout << e.what() << '\n';
+    std::exit(1);
   }
 
   if (player_idx != 0 && !isMultipleOf(player_idx, size_of_env)) {
