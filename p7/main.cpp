@@ -39,5 +39,7 @@ int main(int argc, char *argv[]) {
     ParkSpace::printKey();
 
     ParkSpace::gameProcessKeypress(game_map, size_of_env);
+
+    ParkSpace::updateGameMap(game_map, size_of_env);
   }
 }

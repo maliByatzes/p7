@@ -198,6 +198,10 @@ void ParkSpace::initializeBlueGrass(std::vector<char> &game_map,
   }
 }
 
+void ParkSpace::updateGameMap(std::vector<char> &game_map, int size_of_env) {
+  // update lawn with bluegrass
+}
+
 void ParkSpace::movePlayerUp(std::vector<char> &game_map, int size_of_env) {
   int player_idx{};
   try {
@@ -209,12 +213,12 @@ void ParkSpace::movePlayerUp(std::vector<char> &game_map, int size_of_env) {
   if (player_idx != 0 && !isMultipleOf(player_idx, size_of_env)) {
     int player_dest{player_idx - 1};
 
-    if (game_map[player_dest] != 'T') {
-      if (game_map[player_dest] == 'I' || game_map[player_dest] == '*') {
-        game_map[player_dest] = 'T';
+    if (game_map.at(player_dest) != 'T') {
+      if (game_map.at(player_dest) == 'I' || game_map.at(player_dest) == '*') {
+        game_map.at(player_dest) = 'T';
       } else {
-        game_map[player_idx] = '_';
-        game_map[player_dest] = 'P';
+        game_map.at(player_idx) = '_';
+        game_map.at(player_dest) = 'P';
       }
     }
   }
@@ -231,12 +235,12 @@ void ParkSpace::movePlayerDown(std::vector<char> &game_map, int size_of_env) {
   if (!isMultipleOf(player_idx + 1, size_of_env)) {
     int player_dest{player_idx + 1};
 
-    if (game_map[player_dest] != 'T') {
-      if (game_map[player_dest] == 'I' || game_map[player_dest] == '*') {
-        game_map[player_dest] = 'T';
+    if (game_map.at(player_dest) != 'T') {
+      if (game_map.at(player_dest) == 'I' || game_map.at(player_dest) == '*') {
+        game_map.at(player_dest) = 'T';
       } else {
-        game_map[player_idx] = '_';
-        game_map[player_dest] = 'P';
+        game_map.at(player_idx) = '_';
+        game_map.at(player_dest) = 'P';
       }
     }
   }
@@ -253,12 +257,12 @@ void ParkSpace::movePlayerLeft(std::vector<char> &game_map, int size_of_env) {
   if (player_idx >= size_of_env) {
     int player_dest{player_idx - size_of_env};
 
-    if (game_map[player_dest] != 'T') {
-      if (game_map[player_dest] == 'I' || game_map[player_dest] == '*') {
-        game_map[player_dest] = 'T';
+    if (game_map.at(player_dest) != 'T') {
+      if (game_map.at(player_dest) == 'I' || game_map.at(player_dest) == '*') {
+        game_map.at(player_dest) = 'T';
       } else {
-        game_map[player_idx] = '_';
-        game_map[player_dest] = 'P';
+        game_map.at(player_idx) = '_';
+        game_map.at(player_dest) = 'P';
       }
     }
   }
@@ -275,12 +279,12 @@ void ParkSpace::movePlayerRight(std::vector<char> &game_map, int size_of_env) {
   if (player_idx < ((size_of_env * size_of_env) - size_of_env)) {
     int player_dest{player_idx + size_of_env};
 
-    if (game_map[player_dest] != 'T') {
-      if (game_map[player_dest] == 'I' || game_map[player_dest] == '*') {
-        game_map[player_dest] = 'T';
+    if (game_map.at(player_dest) != 'T') {
+      if (game_map.at(player_dest) == 'I' || game_map.at(player_dest) == '*') {
+        game_map.at(player_dest) = 'T';
       } else {
-        game_map[player_idx] = '_';
-        game_map[player_dest] = 'P';
+        game_map.at(player_idx) = '_';
+        game_map.at(player_dest) = 'P';
       }
     }
   }
