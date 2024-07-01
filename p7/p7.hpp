@@ -23,6 +23,7 @@ void initializeBlueGrass(std::vector<char> &game_map, int size_of_env,
 
 void movePlayerUp(std::vector<char> &game_map, int size_of_env);
 void movePlayerDown(std::vector<char> &game_map, int size_of_env);
+void movePlayerLeft(std::vector<char> &game_map, int size_of_env);
 
 bool isMultipleOf(int a, int b);
 int findPlayerPos(const std::vector<char> &game_map);

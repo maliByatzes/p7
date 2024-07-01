@@ -78,6 +78,7 @@ void ParkSpace::gameProcessKeypress(std::vector<char> &game_map,
     movePlayerUp(game_map, size_of_env);
     break;
   case 'a':
+    movePlayerLeft(game_map, size_of_env);
     break;
   case 'd':
     break;
@@ -224,6 +225,24 @@ void ParkSpace::movePlayerDown(std::vector<char> &game_map, int size_of_env) {
 
   if (!isMultipleOf(player_idx + 1, size_of_env)) {
     int player_dest{player_idx + 1};
+
+    // check for entities in the destination column here
+
+    game_map[player_idx] = '_';
+    game_map[player_dest] = 'P';
+  }
+}
+
+void ParkSpace::movePlayerLeft(std::vector<char> &game_map, int size_of_env) {
+  int player_idx{};
+  try {
+    player_idx = findPlayerPos(game_map);
+  } catch (std::runtime_error &e) {
+    std::cout << e.what() << '\n';
+  }
+
+  if (player_idx >= size_of_env) {
+    int player_dest{player_idx - size_of_env};
 
     // check for entities in the destination column here
 
