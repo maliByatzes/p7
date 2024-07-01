@@ -1,16 +1,20 @@
 #include "p7.hpp"
+#include <algorithm>
 #include <cassert>
+#include <cctype>
 #include <cerrno>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
 #include <random>
 #include <sstream>
 #include <stdexcept>
 #include <termios.h>
 #include <unistd.h>
+#include <vector>
 
 #define CRTL_KEY(k) ((k) & 0x1f)
 
@@ -65,10 +69,20 @@ void ParkSpace::die(const char *s) {
   std::exit(1);
 }
 
-void ParkSpace::gameProcessKeypress() {
+void ParkSpace::gameProcessKeypress(std::vector<char> &game_map,
+                                    int size_of_env) {
   char c{readSingleKey()};
 
-  switch (c) {
+  switch (std::tolower(c)) {
+  case 'w':
+    movePlayerUp(game_map, size_of_env);
+    break;
+  case 'a':
+    break;
+  case 'd':
+    break;
+  case 's':
+    break;
   case CRTL_KEY('q'):
     std::cout << "\x1b[2J";
     std::cout << "\x1b[H";
@@ -124,6 +138,8 @@ void ParkSpace::initializePlayer(std::vector<char> &game_map, int size_of_env) {
 void ParkSpace::initializeTrees(std::vector<char> &game_map, int size_of_env,
                                 int num_of_trees) {
 
+  // TODO: some bug is here about random values
+
   double num_of_infested{std::ceil(num_of_trees * 0.25)};
   int infested_trees{static_cast<int>(num_of_infested)};
 
@@ -177,4 +193,32 @@ void ParkSpace::initializeBlueGrass(std::vector<char> &game_map,
       game_map.at(rand_value) = '#';
     }
   }
+}
+
+void ParkSpace::movePlayerUp(std::vector<char> &game_map, int size_of_env) {
+  auto player_it = std::find(game_map.begin(), game_map.end(), 'P');
+
+  if (player_it == std::end(game_map)) {
+    throw std::runtime_error("Could not find player in game map");
+  }
+
+  int player_idx{static_cast<int>(player_it - game_map.begin())};
+
+  if (player_idx != 0 && !isMultipleOf(player_idx, size_of_env)) {
+    int player_dest{player_idx - 1};
+
+    // check for entities in the destination column here
+
+    game_map[player_idx] = '_';
+    game_map[player_dest] = 'P';
+  }
+}
+
+bool ParkSpace::isMultipleOf(int a, int b) {
+  if (b != 0) {
+    if (a % b == 0) {
+      return true;
+    }
+  }
+  return false;
 }
