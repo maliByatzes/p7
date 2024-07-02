@@ -3,13 +3,13 @@
 #include <cassert>
 #include <cctype>
 #include <cerrno>
+#include <cmath>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
-#include <random>
 #include <sstream>
 #include <stdexcept>
 #include <termios.h>
@@ -20,7 +20,9 @@
 
 struct termios original_termios;
 
-int ParkSpace::getInt(const char *str) {
+namespace ParkSpace {
+
+int getInt(const char *str) {
   int num{};
   std::stringstream ss{str};
   ss >> num;
@@ -30,13 +32,13 @@ int ParkSpace::getInt(const char *str) {
   return num;
 }
 
-int ParkSpace::getRandValue(int lower_bound, int upper_bound) {
+int getRandValue(int lower_bound, int upper_bound) {
   assert(upper_bound > lower_bound);
   int range{upper_bound - lower_bound + 1};
   return std::rand() % range + lower_bound;
 }
 
-void ParkSpace::enableRawMode() {
+void enableRawMode() {
   if (tcgetattr(STDIN_FILENO, &original_termios) == -1) {
     die("tcgetattr");
   }
@@ -53,13 +55,13 @@ void ParkSpace::enableRawMode() {
   }
 }
 
-void ParkSpace::disableRawMode() {
+void disableRawMode() {
   if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios) == -1) {
     die("tcsetattr");
   }
 }
 
-void ParkSpace::die(const char *s) {
+void die(const char *s) {
   std::cout << "\x1b[2J";
   std::cout << "\x1b[H";
 
@@ -67,8 +69,7 @@ void ParkSpace::die(const char *s) {
   std::exit(1);
 }
 
-void ParkSpace::gameProcessKeypress(std::vector<char> &game_map,
-                                    int size_of_env) {
+void gameProcessKeypress(std::vector<char> &game_map, int size_of_env) {
   char c{readSingleKey()};
 
   switch (std::tolower(c)) {
@@ -92,7 +93,7 @@ void ParkSpace::gameProcessKeypress(std::vector<char> &game_map,
   }
 }
 
-char ParkSpace::readSingleKey() {
+char readSingleKey() {
   int nread{};
   char c{};
   while ((nread = read(STDIN_FILENO, &c, 1)) != 1) {
@@ -103,13 +104,12 @@ char ParkSpace::readSingleKey() {
   return c;
 }
 
-void ParkSpace::clearScreen() {
+void clearScreen() {
   std::cout << "\x1b[2J";
   std::cout << "\x1b[H";
 }
 
-void ParkSpace::printGameMap(const std::vector<char> &game_map,
-                             int size_of_env) {
+void printGameMap(const std::vector<char> &game_map, int size_of_env) {
 
   for (std::size_t i = 0; i < size_of_env; ++i) {
     std::cout << std::setw(4);
@@ -121,14 +121,14 @@ void ParkSpace::printGameMap(const std::vector<char> &game_map,
   std::cout << '\n';
 }
 
-void ParkSpace::printKey() {
+void printKey() {
   std::cout << "+++++++++++++KEY+++++++++++++\n";
   std::cout << "P => Player, T => Tree, I = Infested Tree\n";
   std::cout << "# => Bluegrass, * => Tree on Bluegrass\n";
   std::cout << "_ => Lawn\n";
 }
 
-void ParkSpace::initializePlayer(std::vector<char> &game_map, int size_of_env) {
+void initializePlayer(std::vector<char> &game_map, int size_of_env) {
   int cols{2};
   int num_of_spaces{cols * size_of_env};
   int rand_value{getRandValue(0, num_of_spaces - 1)};
@@ -136,8 +136,8 @@ void ParkSpace::initializePlayer(std::vector<char> &game_map, int size_of_env) {
   game_map.at(static_cast<std::size_t>(rand_value)) = 'P';
 }
 
-void ParkSpace::initializeTrees(std::vector<char> &game_map, int size_of_env,
-                                int num_of_trees) {
+void initializeTrees(std::vector<char> &game_map, int size_of_env,
+                     int num_of_trees) {
 
   // TODO: some bug is here about random values
 
@@ -171,8 +171,8 @@ void ParkSpace::initializeTrees(std::vector<char> &game_map, int size_of_env,
   }
 }
 
-void ParkSpace::initializeBlueGrass(std::vector<char> &game_map,
-                                    int size_of_env, int num_of_bluegrass) {
+void initializeBlueGrass(std::vector<char> &game_map, int size_of_env,
+                         int num_of_bluegrass) {
 
   for (int i = 0; i < num_of_bluegrass; ++i) {
     int rand_value{getRandValue(0, size_of_env * size_of_env)};
@@ -197,7 +197,7 @@ void ParkSpace::initializeBlueGrass(std::vector<char> &game_map,
 }
 
 // absolutely epitome of good code this 󰩐
-void ParkSpace::updateGameMap(std::vector<char> &game_map, int size_of_env) {
+void updateGameMap(std::vector<char> &game_map, int size_of_env) {
   // update lawn with bluegrass
   for (size_t i = 0; i < size_of_env * size_of_env; ++i) {
     if (game_map.at(i) == '_') {
@@ -343,7 +343,7 @@ void ParkSpace::updateGameMap(std::vector<char> &game_map, int size_of_env) {
   }
 }
 
-void ParkSpace::movePlayerUp(std::vector<char> &game_map, int size_of_env) {
+void movePlayerUp(std::vector<char> &game_map, int size_of_env) {
   int player_idx{};
   try {
     player_idx = findPlayerPos(game_map);
@@ -366,7 +366,7 @@ void ParkSpace::movePlayerUp(std::vector<char> &game_map, int size_of_env) {
   }
 }
 
-void ParkSpace::movePlayerDown(std::vector<char> &game_map, int size_of_env) {
+void movePlayerDown(std::vector<char> &game_map, int size_of_env) {
   int player_idx{};
   try {
     player_idx = findPlayerPos(game_map);
@@ -388,7 +388,7 @@ void ParkSpace::movePlayerDown(std::vector<char> &game_map, int size_of_env) {
   }
 }
 
-void ParkSpace::movePlayerLeft(std::vector<char> &game_map, int size_of_env) {
+void movePlayerLeft(std::vector<char> &game_map, int size_of_env) {
   int player_idx{};
   try {
     player_idx = findPlayerPos(game_map);
@@ -410,7 +410,7 @@ void ParkSpace::movePlayerLeft(std::vector<char> &game_map, int size_of_env) {
   }
 }
 
-void ParkSpace::movePlayerRight(std::vector<char> &game_map, int size_of_env) {
+void movePlayerRight(std::vector<char> &game_map, int size_of_env) {
   int player_idx{};
   try {
     player_idx = findPlayerPos(game_map);
@@ -432,7 +432,7 @@ void ParkSpace::movePlayerRight(std::vector<char> &game_map, int size_of_env) {
   }
 }
 
-bool ParkSpace::isMultipleOf(int a, int b) {
+bool isMultipleOf(int a, int b) {
   if (b != 0) {
     if (a % b == 0) {
       return true;
@@ -441,10 +441,11 @@ bool ParkSpace::isMultipleOf(int a, int b) {
   return false;
 }
 
-int ParkSpace::findPlayerPos(const std::vector<char> &game_map) {
+int findPlayerPos(const std::vector<char> &game_map) {
   auto player_it = std::find(game_map.begin(), game_map.end(), 'P');
   if (player_it == std::end(game_map)) {
     throw std::runtime_error("Could not find player in game map");
   }
   return static_cast<int>(player_it - game_map.begin());
 }
+} // namespace ParkSpace

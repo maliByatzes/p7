@@ -5,6 +5,15 @@
 
 namespace ParkSpace {
 
+enum class Entities {
+  player = 'P',
+  tree = 'T',
+  infested_tree = 'I',
+  bluegrass = '#',
+  tree_on_bluegrass = '*',
+  lawn = '_'
+};
+
 int getInt(const char *str);
 int getRandValue(int lower_bound, int upper_bound);
 void enableRawMode();
