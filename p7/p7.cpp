@@ -31,11 +31,9 @@ int ParkSpace::getInt(const char *str) {
 }
 
 int ParkSpace::getRandValue(int lower_bound, int upper_bound) {
-  std::random_device r;
-  std::default_random_engine engine(r());
-  std::uniform_int_distribution<int> uniform_dist(lower_bound, upper_bound);
-  int rand_value{uniform_dist(engine)};
-  return rand_value;
+  assert(upper_bound > lower_bound);
+  int range{upper_bound - lower_bound + 1};
+  return std::rand() % range + lower_bound;
 }
 
 void ParkSpace::enableRawMode() {
@@ -204,6 +202,7 @@ void ParkSpace::updateGameMap(std::vector<char> &game_map, int size_of_env) {
   for (size_t i = 0; i < size_of_env * size_of_env; ++i) {
     if (game_map.at(i) == '_') {
 
+      // first column
       if (i < size_of_env) {
         // top-left corner
         if (i == 0) {
@@ -248,6 +247,7 @@ void ParkSpace::updateGameMap(std::vector<char> &game_map, int size_of_env) {
         }
       }
 
+      // first row
       if (isMultipleOf(i, size_of_env) && i != 0) {
         // top-right corner
         if (i == ((size_of_env * size_of_env) - size_of_env)) {
@@ -277,6 +277,7 @@ void ParkSpace::updateGameMap(std::vector<char> &game_map, int size_of_env) {
         }
       }
 
+      // last column
       if (i > ((size_of_env * size_of_env) - size_of_env)) {
         // bottom-left corner
         if (i == ((size_of_env * size_of_env) - 1)) {
@@ -306,6 +307,7 @@ void ParkSpace::updateGameMap(std::vector<char> &game_map, int size_of_env) {
         }
       }
 
+      // last row
       if (isMultipleOf(i + 1, size_of_env) && i != (size_of_env - 1) &&
           i != ((size_of_env * size_of_env) - 1)) {
         int cumulative{};
@@ -322,6 +324,7 @@ void ParkSpace::updateGameMap(std::vector<char> &game_map, int size_of_env) {
         continue;
       }
 
+      // middle
       int cumulative{};
       if (game_map.at(i - 1) == '#') {
         cumulative += 5;

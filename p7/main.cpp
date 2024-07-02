@@ -1,10 +1,13 @@
 #include "p7.hpp"
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
 
 int main(int argc, char *argv[]) {
+  std::srand(static_cast<unsigned int>(std::time(0)));
+
   if (argc != 4) {
     std::cerr << "Invalid program invocation.\n";
     std::cout << "Run: " << argv[0]
